@@ -5,9 +5,15 @@ export const createProduct = async (product) => {
   return newProduct;
 };
 
-export const getAllProducts = async () => {
-  const query = await db("products").select(["name", "id"]);
-  return query;
+export const getAllProducts = async (showDeleted) => {
+  let query =  db("products");
+   if (showDeleted === "true") {
+  } else if (showDeleted === "onlyDeleted") {
+    query.whereNotNull("deleted_at");
+  } else {
+    query.whereNull("deleted_at");
+  }
+  return await query.select(["name", "id"]);
 };
 
 export const getProductById = async (id) => {

@@ -20,7 +20,8 @@ export const createItem = async (req, res) => {
 
 export const getAllItems = async (req, res) => {
   try {
-    const items = await getAllIngredients();
+     const {showDeleted} = req.query;
+    const items = await getAllIngredients(showDeleted);
     res.status(200).json(items);
   } catch (error) {
     logger(error, "ERROR");

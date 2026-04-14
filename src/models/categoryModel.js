@@ -5,9 +5,15 @@ export const createCategory = async (category) => {
   return newItem;
 };
 
-export const getAllCategories = async () => {
-  const query = await db("categories").select(["name", "description"]);
-  return query;
+export const getAllCategories = async (showDeleted) => {
+  const query =  db("categories")
+  if (showDeleted === "true") {
+  } else if (showDeleted === "onlyDeleted") {
+    query.whereNotNull("deleted_at");
+  } else {
+    query.whereNull("deleted_at");
+  }
+  return await query.select(["name", "description"]);;
 };
 
 export const getCategoryById = async (id) => {

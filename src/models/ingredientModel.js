@@ -1,13 +1,21 @@
 import db from "../config/database.js";
 
 export const createIngredient = async (ingredient) => {
-  const [newIngredient] = await db("ingredients").insert(ingredient).returning("*");
+  const [newIngredient] = await db("ingredients")
+    .insert(ingredient)
+    .returning("*");
   return newIngredient;
 };
 
-export const getAllIngredients = async () => {
-  const query = await db("ingredients").select(["name", "id"]);
-  return query;
+export const getAllIngredients = async (showDeleted) => {
+  const query = db("ingredients");
+  if (showDeleted === "true") {
+  } else if (showDeleted === "onlyDeleted") {
+    query.whereNotNull("deleted_at");
+  } else {
+    query.whereNull("deleted_at");
+  }
+  return await query.select(["name", "id"]);
 };
 
 export const getIngredientById = async (id) => {
