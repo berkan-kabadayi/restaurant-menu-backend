@@ -1,4 +1,3 @@
-// Doğru import (config klasöründeki bağlantıyı kullanıyoruz)
 import db from "../config/database.js";
 
 export const createCategory = async (category) => {
@@ -12,12 +11,17 @@ export const getAllCategories = async () => {
 };
 
 export const getCategoryById = async (id) => {
-  const category = await db("categories").where({ id }).first();
+  const category = await db("categories")
+    .where({ id })
+    .whereNull("deleted_at")
+    .first();
+  return category;
 };
 
 export const updateCategory = async (id, category) => {
   const [updatedCategory] = await db("categories")
     .where({ id })
+    .whereNull("deleted_at")
     .update(category)
     .returning("*");
   return updatedCategory;
